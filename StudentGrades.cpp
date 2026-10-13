@@ -19,6 +19,40 @@ struct Student
     char letterGrade = 'F';
 };
 
+void calculateAverages(Student* students, int studentCount, int testCount)
+{
+    for (int i = 0; i < studentCount; i++)
+    {
+        double total = 0.0;
+
+        for (int j = 0; j < testCount; j++)
+        {
+            total += students[i].scores[j];
+        }
+
+        students[i].average = total / testCount;
+    }
+}
+
+void assignLetterGrades(Student* students, int studentCount)
+{
+    for (int i = 0; i < studentCount; i++)
+    {
+        double average = students[i].average;
+
+        if (average >= 90)
+            students[i].letterGrade = 'A';
+        else if (average >= 80)
+            students[i].letterGrade = 'B';
+        else if (average >= 70)
+            students[i].letterGrade = 'C';
+        else if (average >= 60)
+            students[i].letterGrade = 'D';
+        else
+            students[i].letterGrade = 'F';
+    }
+}
+
 int main()
 {
     ifstream inputFile("student_data.txt");
@@ -85,6 +119,9 @@ int main()
         return 1;
     }
 
+    calculateAverages(students, studentCount, testCount);
+    assignLetterGrades(students, studentCount); 
+
     cout << "Number of students: " << studentCount << endl;
     cout << "Number of tests: " << testCount << endl;
 
@@ -98,7 +135,9 @@ int main()
             cout << students[i].scores[j] << " ";
         }
 
-        cout << endl;
+        cout << " Average: " << fixed << setprecision(2)
+            << students[i].average
+            << " Grade: " << students[i].letterGrade << endl;
     }
 
     for (int i = 0; i < studentCount; i++)
