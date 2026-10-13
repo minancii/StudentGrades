@@ -13,10 +13,10 @@ using namespace std;
 struct Student
 {
     string lastName;
-    int studentID;
-    double* scores;
-    double average;
-    char letterGrade;
+    int studentID = 0;
+    double* scores = nullptr;
+    double average = 0.0;
+    char letterGrade = 'F';
 };
 
 int main()
@@ -46,8 +46,66 @@ int main()
         students[i].scores = nullptr;
     }
 
+    bool dataValid = true;
+
+    for (int i = 0; i < studentCount; i++)
+    {
+        if (!(inputFile >> students[i].lastName >> students[i].studentID))
+        {
+            dataValid = false;
+            break;
+        }
+
+        students[i].scores = new double[testCount];
+
+        for (int j = 0; j < testCount; j++)
+        {
+            if (!(inputFile >> students[i].scores[j]))
+            {
+                dataValid = false;
+                break;
+            }
+        }
+
+        if (!dataValid)
+            break;
+    }
+
+    if (!dataValid)
+    {
+        cout << "Error: Invalid student data." << endl;
+
+        for (int i = 0; i < studentCount; i++)
+        {
+            delete[] students[i].scores;
+        }
+
+        delete[] students;
+        inputFile.close();
+        return 1;
+    }
+
     cout << "Number of students: " << studentCount << endl;
     cout << "Number of tests: " << testCount << endl;
+
+    for (int i = 0; i < studentCount; i++)
+    {
+        cout << students[i].lastName << " "
+            << students[i].studentID << ": ";
+
+        for (int j = 0; j < testCount; j++)
+        {
+            cout << students[i].scores[j] << " ";
+        }
+
+        cout << endl;
+    }
+
+    for (int i = 0; i < studentCount; i++)
+    {
+        delete[] students[i].scores;
+        students[i].scores = nullptr;
+    }
 
     delete[] students;
     students = nullptr;
